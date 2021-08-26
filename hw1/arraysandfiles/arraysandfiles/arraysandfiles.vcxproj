@@ -141,10 +141,6 @@
   <ItemGroup>
     <ClCompile Include="..\..\arraysandfiles.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\..\input12.txt" />
-    <Text Include="..\..\input13.txt" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

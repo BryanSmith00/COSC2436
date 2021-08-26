@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	const string command = am.get("command");
 
 	//Temp hardcoded file name
-	input = "input12.txt";
+	input = "input11.txt";
 
 	readInputFile(input);
     
