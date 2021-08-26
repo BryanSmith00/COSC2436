@@ -27,10 +27,14 @@ void readInputFile(string input) {
 	ifstream inputFile(input);
 	string word;
 
+
 	if (inputFile) {
 		while (!inputFile.eof()) {
-			cin >> word;
-			cout << word << endl;
+			getline(inputFile, word);
+
+			if (word != "") {
+				cout << word << endl;
+			}
 		}
 	}
 
