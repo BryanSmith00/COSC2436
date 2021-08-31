@@ -16,9 +16,9 @@ struct Book {
 		text(text), genre(genre), title(title), author(author), year(year) {}
 };
 
+vector<Book> readInputFile(string);
 vector<Book> readCommandFile(string, vector<Book>);
 void printResults(string, vector<Book>);
-void readInputFile(string input, vector<Book>&);
 
 int main(int argc, char* argv[])
 {
@@ -35,7 +35,7 @@ int main(int argc, char* argv[])
 	output = "ans11.txt";
 	command = "command11.txt";
 
-	readInputFile(input, books);
+	books = readInputFile(input);
 
 	/*for (unsigned int i = 0; i < books.size(); i++)
 	{
@@ -48,8 +48,9 @@ int main(int argc, char* argv[])
     
 }
 
-void readInputFile(string input, vector<Book> &books) {
+vector<Book> readInputFile(string input) {
 	ifstream inputFile(input);
+	vector<Book> books;
 	string word;
 	string genre;
 	string title;
@@ -100,12 +101,14 @@ void readInputFile(string input, vector<Book> &books) {
 		}
 	}
 	inputFile.close();
+	return books;
 }
 
 vector<Book> readCommandFile(string fileName, vector<Book> bookList) {
 
 	string line;
 	string word;
+	string temp;
 	vector<string> genres;
 	vector<string> titles;
 	vector<string> authors;
@@ -124,17 +127,35 @@ vector<Book> readCommandFile(string fileName, vector<Book> bookList) {
 			getline(ss, word, ':');
 
 			if (word == "genre") {
-
+				getline(ss, temp);
+				genres.push_back(temp);
 			}
 			else if (word == "title") {
-
+				getline(ss, temp);
+				titles.push_back(temp);
 			}
 			else if (word == "author") {
-
+				getline(ss, temp);
+				authors.push_back(temp);
 			}
 			else if (word == "year") {
+				getline(ss, temp);
+				years.push_back(temp);
+			}
+		}
+
+		if (genres.empty() && titles.empty() && authors.empty() && years.empty())
+			return bookList;
+		else {
+
+			///////////////////////
+			//Matching goes here//
+			//////////////////////
+			
+			if (!genres.empty() && !titles.empty() && !authors.empty() && !years.empty()) {
 
 			}
+
 		}
 	}
 
@@ -147,7 +168,7 @@ void printResults(string fileName, vector<Book> correctBooks) {
 	//Create the output file with the name given by argument manager
 	ofstream outputFile(fileName);
 
-	for (int i = 0; i < correctBooks.size(); i++)
+	for (unsigned int i = 0; i < correctBooks.size(); i++)
 	{
 		outputFile << correctBooks.at(i).text << endl;
 	}
