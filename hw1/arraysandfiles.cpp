@@ -18,7 +18,7 @@ struct Book {
 
 vector<Book> readInputFile(string);
 vector<Book> readCommandFile(string, vector<Book>);
-void printResults(string, vector<Book>);
+string removeSpace(string word);
 
 int main(int argc, char* argv[])
 {
@@ -37,14 +37,21 @@ int main(int argc, char* argv[])
 
 	books = readInputFile(input);
 
-	/*for (unsigned int i = 0; i < books.size(); i++)
-	{
-		cout << books.at(i).genre << " " << books.at(i).title << " " << books.at(i).author << " " << books.at(i).year << endl;
-	}*/
-
 	matchingBooks = readCommandFile(command, books);
 
-	printResults(output, matchingBooks);
+	ofstream outputFile(output);
+
+	for (unsigned int i = 0; i < matchingBooks.size(); i++)
+	{
+		outputFile << matchingBooks.at(i).text << endl;
+	}
+
+	for (unsigned int i = 0; i < matchingBooks.size(); i++)
+	{
+		cout << matchingBooks.at(i).text << endl;
+	}
+
+	outputFile.close();
     
 }
 
@@ -66,7 +73,9 @@ vector<Book> readInputFile(string input) {
 			if (word != "") {
 
 				//Removes all of the spaces from the book entry
-				word.erase(remove(word.begin(), word.end(), ' '), word.end());
+				//word.erase(remove(word.begin(), word.end(), ' '), word.end());
+				word = removeSpace(word);
+
 				stringstream ss(word);
 
 				getline(ss, genre, ':');
@@ -144,8 +153,11 @@ vector<Book> readCommandFile(string fileName, vector<Book> bookList) {
 			}
 		}
 
-		if (genres.empty() && titles.empty() && authors.empty() && years.empty())
+		cout << "Commands: " << genres.size() << " " << titles.size() << " " << authors.size() << " " << years.size() << endl;
+
+		if (genres.empty() && titles.empty() && authors.empty() && years.empty()) {
 			return bookList;
+		}
 		else {
 
 			///////////////////////
@@ -153,25 +165,64 @@ vector<Book> readCommandFile(string fileName, vector<Book> bookList) {
 			//////////////////////
 			
 			if (!genres.empty() && !titles.empty() && !authors.empty() && !years.empty()) {
+				for (unsigned int i = 0; i < bookList.size(); i++)
+				{
+					bool genreFlag = false;
+					bool titleFlag = false;
+					bool authorFlag = false;
+					bool yearFlag = false;
 
+					for (unsigned int j = 0; j < genres.size(); j++)
+					{
+						if (bookList.at(i).genre == genres.at(j)) {
+							genreFlag = true;
+						}
+					}
+
+					for (unsigned int j = 0; j < titles.size(); j++)
+					{
+						if (bookList.at(i).title == titles.at(j)) {
+							titleFlag = true;
+						}
+					}
+
+					for (unsigned int j = 0; j < authors.size(); j++)
+					{
+						if (bookList.at(i).author == authors.at(j)) {
+							authorFlag = true;
+						}
+					}
+
+					for (unsigned int j = 0; j < years.size(); j++)
+					{
+						if (bookList.at(i).year == years.at(j)) {
+							yearFlag = true;
+						}
+					}
+
+					if (genreFlag && titleFlag && authorFlag && yearFlag) {
+						matchingBooks.push_back(bookList.at(i));
+					}
+				}
 			}
 
 		}
+		return matchingBooks;
 	}
-
-	commandFile.close();
-	return matchingBooks;
+	else {
+		commandFile.close();
+		return bookList;
+	}
 }
 
-void printResults(string fileName, vector<Book> correctBooks) {
+string removeSpace(string word) {
+	string newWord = "";
 
-	//Create the output file with the name given by argument manager
-	ofstream outputFile(fileName);
-
-	for (unsigned int i = 0; i < correctBooks.size(); i++)
+	for (unsigned int i = 0; i < word.size(); i++)
 	{
-		outputFile << correctBooks.at(i).text << endl;
+		if (word[i] != ' ') {
+			newWord += word[i];
+		}
 	}
-
-	outputFile.close();
+	return newWord;
 }
