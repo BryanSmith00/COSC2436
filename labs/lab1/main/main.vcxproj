@@ -143,6 +143,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\ArgumentManager.h" />
+    <ClInclude Include="ArgumentManager.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="input1.txt" />
+    <Text Include="input2.txt" />
+    <Text Include="input3.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

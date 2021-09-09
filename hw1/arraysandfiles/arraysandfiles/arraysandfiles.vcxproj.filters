@@ -24,7 +24,8 @@
     <Text Include="input11.txt" />
     <Text Include="input12.txt" />
     <Text Include="..\..\command11.txt" />
-    <Text Include="..\..\command12.txt" />
     <Text Include="..\..\command13.txt" />
+    <Text Include="command14.txt" />
+    <Text Include="command12.txt" />
   </ItemGroup>
 </Project>

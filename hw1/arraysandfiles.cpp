@@ -30,11 +30,6 @@ int main(int argc, char* argv[])
 	vector<Book> books;
 	vector<Book> matchingBooks;
 
-	//Temp hardcoded file name CHANGE THIS BEFORE SUBMITTING
-	input = "input11.txt";
-	output = "ans11.txt";
-	command = "command11.txt";
-
 	books = readInputFile(input);
 
 	matchingBooks = readCommandFile(command, books);
@@ -46,13 +41,7 @@ int main(int argc, char* argv[])
 		outputFile << matchingBooks.at(i).text << endl;
 	}
 
-	for (unsigned int i = 0; i < matchingBooks.size(); i++)
-	{
-		cout << matchingBooks.at(i).text << endl;
-	}
-
 	outputFile.close();
-    
 }
 
 vector<Book> readInputFile(string input) {
@@ -72,8 +61,6 @@ vector<Book> readInputFile(string input) {
 			//Only moves on to process the line if it is not empty indicating a book entry
 			if (word != "") {
 
-				//Removes all of the spaces from the book entry
-				//word.erase(remove(word.begin(), word.end(), ' '), word.end());
 				word = removeSpace(word);
 
 				stringstream ss(word);
@@ -153,64 +140,70 @@ vector<Book> readCommandFile(string fileName, vector<Book> bookList) {
 			}
 		}
 
-		cout << "Commands: " << genres.size() << " " << titles.size() << " " << authors.size() << " " << years.size() << endl;
+		vector<Book> firstTest;
+		vector<Book> secondTest;
+		vector<Book> thirdTest;
 
-		if (genres.empty() && titles.empty() && authors.empty() && years.empty()) {
-			return bookList;
-		}
-		else {
-
-			///////////////////////
-			//Matching goes here//
-			//////////////////////
-			
-			if (!genres.empty() && !titles.empty() && !authors.empty() && !years.empty()) {
-				for (unsigned int i = 0; i < bookList.size(); i++)
-				{
-					bool genreFlag = false;
-					bool titleFlag = false;
-					bool authorFlag = false;
-					bool yearFlag = false;
-
-					for (unsigned int j = 0; j < genres.size(); j++)
-					{
-						if (bookList.at(i).genre == genres.at(j)) {
-							genreFlag = true;
-						}
-					}
-
-					for (unsigned int j = 0; j < titles.size(); j++)
-					{
-						if (bookList.at(i).title == titles.at(j)) {
-							titleFlag = true;
-						}
-					}
-
-					for (unsigned int j = 0; j < authors.size(); j++)
-					{
-						if (bookList.at(i).author == authors.at(j)) {
-							authorFlag = true;
-						}
-					}
-
-					for (unsigned int j = 0; j < years.size(); j++)
-					{
-						if (bookList.at(i).year == years.at(j)) {
-							yearFlag = true;
-						}
-					}
-
-					if (genreFlag && titleFlag && authorFlag && yearFlag) {
-						matchingBooks.push_back(bookList.at(i));
-					}
+		//If the command file has 1 or more genre entries then it will add all corresponding books to the firstTest vector
+		//Else no genre commands means all valid books will progress to the next phase of testing
+		if (genres.size() > 0) {
+			for (unsigned int i = 0; i < bookList.size(); i++)
+			{
+				for (unsigned int j = 0; j < genres.size(); j++) {
+					if (bookList.at(i).genre == genres.at(j))
+						firstTest.push_back(bookList.at(i));
 				}
 			}
-
 		}
+		else if (genres.size() == 0)
+			firstTest = bookList;
+
+		//If the command file has 1 or more title entries then it will add all corresponding books from the firstTest vector to the secondTest vector
+		//Else no title commands means all valid books will progress to the next phase of testing
+		if (titles.size() > 0) {
+			for (unsigned int i = 0; i < firstTest.size(); i++)
+			{
+				for (unsigned int j = 0; j < titles.size(); j++) {
+					if (firstTest.at(i).title == titles.at(j))
+						secondTest.push_back(firstTest.at(i));
+				}
+			}
+		}
+		else if (titles.size() == 0)
+			secondTest = firstTest;
+
+		//If the command file has 1 or more author entries then it will add all corresponding books from the secondTest vector to the thirdTest vector
+		//Else no author commands means all valid books will progress to the next phase of testing
+		if (authors.size() > 0) {
+			for (unsigned int i = 0; i < secondTest.size(); i++)
+			{
+				for (unsigned int j = 0; j < authors.size(); j++) {
+					if (secondTest.at(i).author == authors.at(j))
+						thirdTest.push_back(secondTest.at(i));
+				}
+			}
+		}
+		else if (authors.size() == 0)
+			thirdTest = secondTest;
+
+		//If the command file has 1 or more year entries then it will add all corresponding books from the thirdTest vector to the matchingBooks vector
+		//Else no year commands means all valid books will be added to matchingBooks
+		if (years.size() > 0) {
+			for (unsigned int i = 0; i < thirdTest.size(); i++)
+			{
+				for (unsigned int j = 0; j < years.size(); j++) {
+					if (thirdTest.at(i).year == years.at(j))
+						matchingBooks.push_back(thirdTest.at(i));
+				}
+			}
+		}
+		else if (years.size() == 0)
+			matchingBooks = thirdTest;
+
 		return matchingBooks;
 	}
 	else {
-		commandFile.close();
+
 		return bookList;
 	}
 }

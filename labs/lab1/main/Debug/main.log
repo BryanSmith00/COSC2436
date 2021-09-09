@@ -1,2 +1,2 @@
 ﻿  main.cpp
-C:\Users\Bryan\Documents\Programming\COSC2436\labs\lab1\main\main.cpp(4,10): fatal error C1083: Cannot open include file: 'ArgumentManager.h': No such file or directory
+  main.vcxproj -> C:\Users\Bryan\Documents\Programming\COSC2436\labs\lab1\main\Debug\main.exe

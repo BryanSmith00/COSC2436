@@ -23,5 +23,13 @@
     <ClInclude Include="..\ArgumentManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ArgumentManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="input1.txt" />
+    <Text Include="input2.txt" />
+    <Text Include="input3.txt" />
   </ItemGroup>
 </Project>
