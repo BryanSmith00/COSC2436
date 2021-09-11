@@ -23,6 +23,7 @@ private:
 
 public:
     LinkedList();
+    const Node* getTail();
     bool isEmpty();
     int getSize();
     bool print();
@@ -30,7 +31,13 @@ public:
     void addToEnd(string);
     bool addAt(int index, string word);
     string removeFromFront();
-    string removeFromEnd();
-    string removeAt(int index);
+    bool removeFromEnd();
+    bool removeAt(int index);
+    string at(int index);
+    bool contains(string sentence);
+    void swap(int index1, int index2);
+    void changeValue(int index, string data);
+    void sort();
+    void sortLength();
 
 };

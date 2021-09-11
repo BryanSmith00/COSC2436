@@ -9,6 +9,10 @@ LinkedList::LinkedList() {
     size = 0;
 }
 
+const Node* LinkedList::getTail() {
+    return tail;
+}
+
 bool LinkedList::isEmpty() {
     return head == nullptr;
 }
@@ -30,8 +34,6 @@ bool LinkedList::print() {
             //Move the pointer forward 1
             cu = cu->next;
         }
-        cout << "Value of head: " << head->word << endl;
-        cout << "Value of tail: " << tail->word << endl;
         return true;
     }
 }
@@ -121,38 +123,128 @@ string LinkedList::removeFromFront() {
     }
 }
 
-string LinkedList::removeFromEnd() {
+bool LinkedList::removeFromEnd() {
 
     if (head == nullptr) {
-        return "";
+        return false;
     }
-    else {
+    else if (head->next == nullptr) {
+        delete head;
+        head = nullptr;
+        return true;
+    } else {
         Node* curr = head;
-        Node* prev;
 
-        while (curr->next != tail) {
-            prev = curr;
+        while (curr->next->next != nullptr) {
             curr = curr->next;
         }
-        string value = curr->next->word;
-        tail = curr;
-        tail->next = nullptr;
         delete curr->next;
+        curr->next = nullptr;
+        tail = curr;
 
         size--;
-        return value;
+        return true;
     }
 }
 
-string LinkedList::removeAt(int index) {
+bool LinkedList::removeAt(int index) {
 
     if (head == nullptr) {
-        return "";
+        return false;
     }
     else {
 
+        Node* curr = head;
 
+        for (int i = 0; i < index - 1; i++)
+        {
+            curr = curr->next;
+        }
+        Node* prev = curr;
+        curr = curr->next;
+        prev->next = curr->next;
+        delete curr;
 
         size--;
+        return true;
+    }
+}
+
+string LinkedList::at(int index) {
+    Node* curr = new Node;
+    curr = head;
+
+    for (int i = 0; i < index; i++)
+    {
+        curr = curr->next;
+    }
+    return curr->word;
+}
+
+bool LinkedList::contains(string sentence) {
+    Node* curr = head;
+
+    for (int i = 0; i < size; i++)
+    {
+        if (curr->word == sentence)
+            return true;
+
+        curr = curr->next;
+    }
+    return false;
+}
+
+void LinkedList::changeValue(int index, string data) {
+    Node* curr = head;
+    for (int i = 0; i < index; i++)
+    {
+        curr = curr->next;
+    }
+    curr->word = data;
+}
+
+void LinkedList::swap(int index1, int index2) {
+    string data1 = this->at(index1);
+    string data2 = this->at(index2);
+
+    this->changeValue(index1, data2);
+    this->changeValue(index2, data1);
+    /*
+    Node* curr = head;
+    Node* temp = new Node;
+    Node* start = new Node;
+
+    for (int i = 0; i < index1 - 1; i++)
+    {
+        curr = curr->next;
+    }
+
+    if (index1 == 0) {
+
+    }
+    else {
+
+    }*/
+}
+
+void LinkedList::sort() {
+    for (int i = 0; i < this->getSize() - 1; i++) {
+        for (int j = 0; j < this->getSize() - i - 1; j++) {
+            if (this->at(j) > this->at(j + 1))
+            {
+                this->swap(j, j + 1);
+            }
+        }
+    }
+}
+
+void LinkedList::sortLength() {
+    for (int i = 0; i < this->getSize() - 1; i++) {
+        for (int j = 0; j < this->getSize() - i - 1; j++) {
+            if (this->at(j).length() > this->at(j + 1).length())
+            {
+                this->swap(j, j + 1);
+            }
+        }
     }
 }
