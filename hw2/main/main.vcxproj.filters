@@ -31,11 +31,11 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\input23.txt" />
     <Text Include="input21.txt" />
     <Text Include="command21.txt" />
     <Text Include="command22.txt" />
     <Text Include="command23.txt" />
     <Text Include="input22.txt" />
+    <Text Include="input23.txt" />
   </ItemGroup>
 </Project>

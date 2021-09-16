@@ -38,6 +38,7 @@ bool LinkedList::print() {
     }
 }
 
+//Appends a node to the front of the linked list
 void LinkedList::addToFront(string word) {
 
     //Create a node
@@ -106,6 +107,7 @@ bool LinkedList::addAt(int index, string word) {
     return true;
 }
 
+//Deletes the first node if it exists
 string LinkedList::removeFromFront() {
 
     if (head == nullptr) {
@@ -123,6 +125,7 @@ string LinkedList::removeFromFront() {
     }
 }
 
+//Deletes the last node of the list if it exists
 bool LinkedList::removeFromEnd() {
 
     if (head == nullptr) {
@@ -147,10 +150,19 @@ bool LinkedList::removeFromEnd() {
     }
 }
 
+//Deletes the node at a specified index
 bool LinkedList::removeAt(int index) {
 
-    if (head == nullptr) {
+    if (index == 0) {
+        this->removeFromFront();
+        return true;
+    }
+    else if (head == nullptr || index < 0 || index >= size) {
         return false;
+    }
+    else if (index == size - 1) {
+        this->removeFromEnd();
+        return true;
     }
     else {
 
@@ -160,16 +172,18 @@ bool LinkedList::removeAt(int index) {
         {
             curr = curr->next;
         }
-        Node* prev = curr;
-        curr = curr->next;
-        prev->next = curr->next;
-        delete curr;
+
+        Node* toDelete = curr->next;
+        curr->next = toDelete->next;
+        //cout << "+---------+ Node to be deleted: " << toDelete->word << endl << endl;
+        delete toDelete;
 
         size--;
         return true;
     }
 }
 
+//Returns the string value of the node at index passed in
 string LinkedList::at(int index) {
     Node* curr = new Node;
     curr = head;
@@ -181,6 +195,7 @@ string LinkedList::at(int index) {
     return curr->word;
 }
 
+//Checks if any node in the linked list contains the specified string
 bool LinkedList::contains(string sentence) {
     Node* curr = head;
 
@@ -194,6 +209,7 @@ bool LinkedList::contains(string sentence) {
     return false;
 }
 
+//Given an index and a new value changes the value of a node
 void LinkedList::changeValue(int index, string data) {
     Node* curr = head;
     for (int i = 0; i < index; i++)
@@ -203,30 +219,16 @@ void LinkedList::changeValue(int index, string data) {
     curr->word = data;
 }
 
+//Swaps the values of two nodes, useful for bubble sort
 void LinkedList::swap(int index1, int index2) {
     string data1 = this->at(index1);
     string data2 = this->at(index2);
 
     this->changeValue(index1, data2);
     this->changeValue(index2, data1);
-    /*
-    Node* curr = head;
-    Node* temp = new Node;
-    Node* start = new Node;
-
-    for (int i = 0; i < index1 - 1; i++)
-    {
-        curr = curr->next;
-    }
-
-    if (index1 == 0) {
-
-    }
-    else {
-
-    }*/
 }
 
+//Sorts the Linked List alphabetically
 void LinkedList::sort() {
     for (int i = 0; i < this->getSize() - 1; i++) {
         for (int j = 0; j < this->getSize() - i - 1; j++) {
@@ -238,6 +240,7 @@ void LinkedList::sort() {
     }
 }
 
+//Sorts the Linked List based on the leangth of each element
 void LinkedList::sortLength() {
     for (int i = 0; i < this->getSize() - 1; i++) {
         for (int j = 0; j < this->getSize() - i - 1; j++) {

@@ -16,19 +16,18 @@ int main(int argc, char* argv[])
 	string output = am.get("output");
 	string command = am.get("command");
 
-	//Temp hardcoded file names remove for submission
-	input = "input22.txt";
-	command = "command22.txt";
-
 	LinkedList sentences;
 
 	readInputFile(sentences, input);
-	sentences.print();
-	cout << endl << endl;
 	
 	readCommandFile(sentences, command);
 
-	sentences.print();
+	ofstream outputFile(output);
+	for (int i = 0; i < sentences.getSize(); i++)
+	{
+		outputFile << sentences.at(i) << endl;
+	}
+	outputFile.close();
 }
 
 void readInputFile(LinkedList &sentences, string input) {
@@ -58,7 +57,6 @@ void readInputFile(LinkedList &sentences, string input) {
 				}
 			}
 		}
-		
 		if (addOrder == "Alphabetically") {
 			sentences.sort();
 		}
@@ -73,7 +71,6 @@ void readCommandFile(LinkedList& sentences, string fileName) {
 	ifstream commandFile(fileName);
 	string command;
 
-	
 	if (commandFile) {
 		while (!commandFile.eof()) {
 			getline(commandFile, command);
@@ -95,19 +92,12 @@ void readCommandFile(LinkedList& sentences, string fileName) {
 
 				getline(ss, temp, ']');
 				sentence = temp.substr(temp.find('[') + 1);
-
-				cout << "Sentence: " << sentence << "     Location to add at: " << loc << "    Size: " << sentences.getSize() << endl << endl;
 				
 				if (loc <= sentences.getSize()) {
 					if (!(sentences.contains(sentence))) {
 						sentences.addAt(loc, sentence);
 					}
 				}
-
-				cout << endl << "Sentences after adding" << endl << endl;
-				sentences.print();
-				cout << endl << endl;
-
 			}
 			else if (command == "Remove") {
 
@@ -116,13 +106,12 @@ void readCommandFile(LinkedList& sentences, string fileName) {
 					if (temp[i] != '[')
 						sentence += temp[i];
 
-				//Loop through all the sentencesfjsdlsflkdshfsklfndfkldf
-				//hehrherherhehrherhehrehrherherhehrherherhe
-				//Need to fix this 
 				for (int i = 0; i < sentences.getSize(); i++)
 				{
-					if (sentences.at(i).find(sentence) >= 0) {
+					if (sentences.at(i).find(sentence) >= 0 && sentences.at(i).find(sentence) <= sentences.at(i).size()) {
+
 						sentences.removeAt(i);
+						i--;
 					}
 				}
 			}
@@ -137,8 +126,7 @@ void readCommandFile(LinkedList& sentences, string fileName) {
 					sentences.sort();
 				else if (sentence == "length")
 					sentences.sortLength();
-			}
-			
+			}	
 		}
 	}
 }
