@@ -36,5 +36,4 @@ public:
     void swap(int index1, int index2);
     void changeValue(int index, string data, double);
     void sort();
-    void sortLength();
 };

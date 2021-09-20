@@ -133,25 +133,15 @@ Score* LinkedList::at(int index) {
 void LinkedList::swap(int index1, int index2) {
     Score* data1 = this->at(index1);
     Score* data2 = this->at(index2);
+    string name = data1->name;
+    int score = data1->score;
 
     this->changeValue(index1, data2->name, data2->score);
-    this->changeValue(index2, data1->name, data1->score);
+    this->changeValue(index2, name, score);
 }
 
 //Sorts the Linked List alphabetically
 void LinkedList::sort() {
-    for (int i = 0; i < this->getSize() - 1; i++) {
-        for (int j = 0; j < this->getSize() - i - 1; j++) {
-            if (this->at(j) > this->at(j + 1))
-            {
-                this->swap(j, j + 1);
-            }
-        }
-    }
-}
-
-//Sorts the Linked List based on the leangth of each element
-void LinkedList::sortLength() {
     for (int i = 0; i < this->getSize() - 1; i++) {
         for (int j = 0; j < this->getSize() - i - 1; j++) {
             if (this->at(j)->score < this->at(j + 1)->score)
