@@ -79,7 +79,7 @@ void DoublyLinkedList::addToEnd(string word) {
     }
 }
 
-/*
+/* Test
 
 bool DoublyLinkedList::addAt(int index, string word) {
     Node* temp = new Node(word);
