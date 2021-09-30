@@ -1,6 +1,0 @@
-genre:fiction
-title:Oliver.Twist
-author:Charles.Dickens
-year:1861
-year:1838
-year:1957

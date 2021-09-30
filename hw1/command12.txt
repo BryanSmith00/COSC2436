@@ -1,3 +1,0 @@
-genre:fiction
-year:1861
-year:1957
