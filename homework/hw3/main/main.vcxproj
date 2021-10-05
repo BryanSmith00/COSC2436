@@ -141,10 +141,14 @@
   <ItemGroup>
     <ClCompile Include="dll.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="reservestack.cpp" />
+    <ClCompile Include="stack.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentManager.h" />
     <ClInclude Include="dll.h" />
+    <ClInclude Include="reservestack.h" />
+    <ClInclude Include="stack.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="command31.txt" />

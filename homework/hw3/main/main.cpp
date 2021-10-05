@@ -4,9 +4,12 @@
 #include <sstream>
 #include "ArgumentManager.h"
 #include "dll.h"
+#include "stack.h"
+#include "reservestack.h"
 using namespace std;
 
-void ReadInputFile(string inputFile, DoublyLinkedList& list);
+void readInputFile(string inputFile, DoublyLinkedList& list, ReserveStack& reserveStack);
+void readCommandFile(string commandFile, string outputFile, DoublyLinkedList& list, ReserveStack& stack);
 string RemoveSpace(string word);
 
 int main(int argc, char* argv[])
@@ -17,16 +20,19 @@ int main(int argc, char* argv[])
 	string command = am.get("command");
 
 	//Temporary, delete this when uploading
-	input = "input31.txt";
-	command = "command31.txt";
+	//input = "input32.txt";
+	//command = "command32.txt";
+	//output = "ans32.txt";
 
 	DoublyLinkedList list;
+	ReserveStack reserveStack;
 
-	ReadInputFile(input, list);
+	readInputFile(input, list, reserveStack);
+	readCommandFile(command, output, list, reserveStack);
 
 }
 
-void ReadInputFile(string inputFile, DoublyLinkedList& list) 
+void readInputFile(string inputFile, DoublyLinkedList& list, ReserveStack& reserveStack) 
 {
 	string type;
 	string line;
@@ -35,6 +41,7 @@ void ReadInputFile(string inputFile, DoublyLinkedList& list)
 
 	if (input) 
 	{
+		//This will read all valid input lines from the file and add them to the Doubly Linked List
 		while (!input.eof())
 		{
 			getline(input, line);
@@ -48,19 +55,88 @@ void ReadInputFile(string inputFile, DoublyLinkedList& list)
 				getline(ss, equation);
 				equation = RemoveSpace(equation);
 
-				if (type == "prefix")
-				{
-
-				}
-				else if (type == "postfix")
-				{
-
-				}
+				list.addToEnd(type, equation);
+				reserveStack.push(type, equation);
 			}
 		}
 	}
 
 	input.close();
+}
+
+void readCommandFile(string commandFile, string outputFile, DoublyLinkedList& list, ReserveStack& stack)
+{
+	string line;
+	string temp;
+	string param;
+	ifstream command(commandFile);
+	ofstream output(outputFile);
+
+	if (command)
+	{
+		//This will read all valid input lines from the file and add them to the Doubly Linked List
+		while (!command.eof())
+		{
+			getline(command, line);
+			stringstream ss(line);
+
+			if (line.find("convertList") != std::string::npos) 
+			{
+				getline(ss, temp, '(');
+				getline(ss, param, ')');
+				
+				list.convertList(param);
+			}
+			else if (line.find("removeList") != string::npos)
+			{
+				getline(ss, temp, '(');
+				getline(ss, param, ')');
+
+				list.removeList(param);
+			}
+			else if (line == "printList")
+			{
+				cout << "List:" << endl; list.print(); cout << endl;
+				output << "List:" << endl; list.print(output); output << endl;
+			}
+			else if (line == "printListBackwards")
+			{
+				cout << "Reversed List:" << endl; list.printRev(); cout << endl;
+				output << "Reversed List:" << endl; list.printRev(output); output << endl;
+			}
+			else if (line.find("pushReserve") != string::npos)
+			{
+
+			}
+			else if (line.find("popReserve") != string::npos)
+			{
+
+			}
+			else if (line.find("flipReserve") != string::npos)
+			{
+
+			}
+			else if (line.find("printReserveSize") != string::npos)
+			{
+
+			}
+			else if (line.find("convertReserve") != string::npos)
+			{
+
+			}
+			else if (line.find("printReserveTop") != string::npos)
+			{
+
+			}
+			else if (line.find("emptyReserve") != string::npos)
+			{
+
+			}
+			
+		}
+	}
+
+	command.close();
 }
 
 string RemoveSpace(string word)
