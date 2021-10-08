@@ -106,7 +106,10 @@ void readCommandFile(string commandFile, string outputFile, DoublyLinkedList& li
 			}
 			else if (line.find("pushReserve") != string::npos)
 			{
+				getline(ss, temp, '(');
+				getline(ss, param, ')');
 
+				stack.push(param);
 			}
 			else if (line.find("popReserve") != string::npos)
 			{
