@@ -83,3 +83,40 @@ string LinkedList::at(int index, Node* h)
 	else
 		return at(--index, h->next);
 }
+
+bool LinkedList::contains(string ID, Node* h)
+{
+	if (size == 0) {
+		return false;
+	}
+
+	if (h->id == ID) {
+		return true;
+	}
+	else if (h->next == nullptr)
+	{
+		return false;
+	}
+	else
+		return contains(ID, h->next);
+}
+
+void LinkedList::changeValue(int index, string data, Node* h) 
+{
+	if (index == 0)
+	{
+		h->id = data;
+		return;
+	}
+	else
+		return changeValue(--index, data, h->next);
+}
+
+void LinkedList::swap(int index1, int index2) 
+{
+	string data1 = at(index1, head);
+	string data2 = at(index2, head);
+
+	this->changeValue(index1, data2, head);
+	this->changeValue(index2, data1, head);
+}

@@ -35,5 +35,7 @@ public:
     void addToFront(string);
     bool addToEnd(string, Node*);
     string at(int, Node*);
-
+    bool contains(string sentence, Node*);
+    void changeValue(int, string, Node*);
+    void swap(int, int);
 };
