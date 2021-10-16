@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include <string>
 #include "LinkedList.h"
 #include "Stack.h"
@@ -30,6 +31,16 @@ void LinkedList::print()
 	while (curr != nullptr)
 	{
 		cout << curr->id << endl;
+		curr = curr->next;
+	}
+}
+
+void LinkedList::print(ofstream& output, Node* h)
+{
+	Node* curr = head;
+	while (curr != nullptr)
+	{
+		output << curr->id << endl;
 		curr = curr->next;
 	}
 }

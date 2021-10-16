@@ -22,10 +22,6 @@ int main(int argc, char* argv[])
 	string output = am.get("output");
 	string command = am.get("command");
 
-	//Temporary, delete this when uploading
-	input = "input13.txt";
-	output = "output13.txt";
-
 	LinkedList encodedBar1;
 	LinkedList encodedBar2;
 
@@ -37,6 +33,19 @@ int main(int argc, char* argv[])
 
 	readInputFile(input, encodedBar1, encodedBar2);
 
+	//-----------------------------------------------------------------------------------------
+	//-----------------------------------------------------------------------------------------
+	//
+	//	Breakthrough: Need to pad the left of the smaller element with 0s 
+	// maybe until size of 100, if they're all padded the same then
+	//  string::compare will return the correct value for any comparison
+	// I believe
+	//
+	//----------------------------------------------------------------------------------------
+	//----------------------------------------------------------------------------------------
+
+	//Loops through all of the encoded Bar1 IDs, decodes them, then adds them to the decoded list
+	//
 	for (int i = 0; i < encodedBar1.getSize(); i++)
 	{
 		string encodedID = encodedBar1.at(i, encodedBar1.getHead());
@@ -44,6 +53,8 @@ int main(int argc, char* argv[])
 		decodedBar1.addToEnd(decodedID, decodedBar1.getHead());
 	}
 
+	//Loops through all of the encoded Bar2 IDs, decodes them, then adds them to the decoded list
+	//
 	for (int i = 0; i < encodedBar2.getSize(); i++)
 	{
 		string encodedID = encodedBar2.at(i, encodedBar2.getHead());
@@ -51,10 +62,8 @@ int main(int argc, char* argv[])
 		decodedBar2.addToEnd(decodedID, decodedBar2.getHead());
 	}
 
-
-	//Sorting the decodedIDs into the guilty and innocent lists
-	//Needs work
-	//This nested loop finds all of the duplicate IDs and marks them guilty
+	//Adds all duplicate IDs to the guilty list
+	//
 	for (int i = 0; i < decodedBar1.getSize(); i++)
 	{
 		for (int j = 0; j < decodedBar2.getSize(); j++)
@@ -64,36 +73,94 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	//Adds any non duplicate decoded Bar1 IDs to the innocent list
+	//
 	for (int i = 0; i < decodedBar1.getSize(); i++)
 		if (!guilty.contains(decodedBar1.at(i, decodedBar1.getHead()), guilty.getHead()))
 			innocent.addToEnd(decodedBar1.at(i, decodedBar1.getHead()), innocent.getHead());
 
+	//Adds any non duplicate decoded Bar2 IDs to the innocent list
+	//
 	for (int i = 0; i < decodedBar2.getSize(); i++)
 		if (!guilty.contains(decodedBar2.at(i, decodedBar2.getHead()), guilty.getHead()))
 			innocent.addToEnd(decodedBar2.at(i, decodedBar2.getHead()), innocent.getHead());
 
-
-	for (int i = 0; i < guilty.getSize(); i++)
+	//Pads all decoded IDs with leading zeroes so they are the maximum
+	if (guilty.getSize() >= 2)
 	{
-		for (int j = 0; j < guilty.getSize() - i - 1; j++)
+		for (int i = 0; i < guilty.getSize() - 1; i++)
 		{
-			if (guilty.at(j, guilty.getHead()) > guilty.at(j + 1, guilty.getHead()))
-				guilty.swap(j, j + 1);
+			for (int j = 0; j < guilty.getSize() - 1; j++)
+			{
+				string firstElement = guilty.at(j, guilty.getHead());
+				string secondElement = guilty.at(j + 1, guilty.getHead());
+				string temp = "";
+
+				for (unsigned int m = 0; m < 100 - firstElement.size(); m++)
+				{
+					temp += "0";
+				}
+				firstElement = temp + firstElement;
+
+				temp = "";
+
+				for (unsigned int n = 0; n < 100 - secondElement.size(); n++)
+				{
+					temp += "0";
+				}
+				secondElement = temp + secondElement;
+
+				if (firstElement.compare(secondElement) > 0)
+					guilty.swap(j, j + 1);
+
+
+			}
 		}
 	}
 
-	for (int i = 0; i < innocent.getSize(); i++)
+	if (innocent.getSize() >= 2) 
 	{
-		for (int j = 0; j < innocent.getSize() - i - 1; j++)
+		for (int i = 0; i < innocent.getSize() - 1; i++)
 		{
-			if (innocent.at(j, innocent.getHead()) > innocent.at(j + 1, innocent.getHead()))
-				innocent.swap(j, j + 1);
+			for (int j = 0; j < innocent.getSize() - 1; j++)
+			{
+				string firstElement = innocent.at(j, innocent.getHead());
+				string secondElement = innocent.at(j + 1, innocent.getHead());
+				string temp = "";
+
+				for (unsigned int m = 0; m < 100 - firstElement.size(); m++)
+				{
+					temp += "0";
+				}
+				firstElement = temp + firstElement;
+
+				temp = "";
+
+				for (unsigned int n = 0; n < 100 - secondElement.size(); n++)
+				{
+					temp += "0";
+				}
+				secondElement = temp + secondElement;
+
+				if (firstElement.compare(secondElement) > 0)
+				{
+					innocent.swap(j, j + 1);
+				}
+			}
 		}
 	}
 
-	guilty.print();
-	cout << endl;
-	innocent.print();
+	ofstream outputFile(output);
+
+	if (guilty.getSize() >= 1) {
+		outputFile << "Guilty:" << endl;
+		guilty.print(outputFile, guilty.getHead());
+	}
+
+	if (innocent.getSize() >= 1) {
+		outputFile << "Innocent:" << endl;
+		innocent.print(outputFile, guilty.getHead());
+	}
 
 }
 

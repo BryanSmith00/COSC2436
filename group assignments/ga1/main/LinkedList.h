@@ -32,6 +32,7 @@ public:
     bool isEmpty();
     int getSize();
     void print();
+    void print(ofstream&, Node*);
     void addToFront(string);
     bool addToEnd(string, Node*);
     string at(int, Node*);
