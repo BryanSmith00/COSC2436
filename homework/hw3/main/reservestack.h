@@ -19,13 +19,16 @@ private:
 public:
     ReserveStack();
     bool isEmpty();
+    int getSize();
+    void setSize(int);
+    reserveStackNode* getTop();
+    reserveStackNode* peek();
     void push(string, string);
     bool pop();
-    char peek();
     void print();
     void flipReserve();
-    int getSize();
     void convert();
-
-
+    string prefixToPostfix(string eq);
+    string postfixToPrefix(string eq);
+    void operator = (reserveStackNode*);
 };

@@ -16,6 +16,11 @@ const Node* DoublyLinkedList::getTail()
     return tail;
 }
 
+const Node* DoublyLinkedList::getHead()
+{
+    return head;
+}
+
 bool DoublyLinkedList::isEmpty() 
 {
     return head == nullptr;
@@ -24,6 +29,28 @@ bool DoublyLinkedList::isEmpty()
 int DoublyLinkedList::getSize()
 {
     return size;
+}
+
+int DoublyLinkedList::getNumPrefix()
+{
+    int num = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (at(i)->type == "prefix")
+            num++;
+    }
+    return num;
+}
+
+int DoublyLinkedList::getNumPostfix()
+{
+    int num = 0;
+    for (int i = 0; i < size; i++)
+    {
+        if (at(i)->type == "postfix")
+            num++;
+    }
+    return num;
 }
 
 bool DoublyLinkedList::print()
@@ -163,13 +190,54 @@ void DoublyLinkedList::addToEnd(string t, string e)
     }
 }
 
-//Deletes the first node if it exists
-bool DoublyLinkedList::removeFromFront() {
+bool DoublyLinkedList::addAt(int index, string t, string e) {
+    Node* temp = new Node(t, e);
+    Node* curr = new Node;
+    curr = head;
 
-    if (head == nullptr) {
+    if (index < 0)
+        return false;
+
+    //If the List is empty or the index specified is 0, adds te node to the beginning of the list
+    if (head == nullptr || index == 0) {
+        addToFront(t, e);
+    }
+
+    //If the index is within the list iterate to the correct position and add the new node
+    else if (index >= 0 && index <= size - 1) {
+        for (int i = 0; i < index - 1; i++)
+        {
+            curr = curr->next;
+        }
+        temp->next = curr->next;
+        temp->prev = curr->prev;
+        curr->next = temp;
+        size++;
+    }
+
+    //If the user tries to add beyond the end of the list it appends it to the end with the AddToEndfunction
+    else if (index > size - 1) {
+        addToEnd(t, e);
+    }
+    return true;
+}
+
+//Deletes the first node if it exists
+bool DoublyLinkedList::removeFromFront() 
+{
+
+    if (head == nullptr) 
+    {
         return false;
     }
-    else {
+    else if (size == 1)
+    {
+        head = nullptr;
+        size--;
+        return true;
+    }
+    else 
+    {
         Node* temp = head;
 
         head = head->next;
@@ -330,50 +398,6 @@ void DoublyLinkedList::convertList(string param)
     }
 }
 
-void DoublyLinkedList::removeList(string param)
-{
-    if (param == "prefix")
-    {
-        for (int i = 0; i < size; i++)
-        {
-            if (this->at(i)->type == "prefix")
-            {
-                this->removeAt(i);
-            }
-        }
-    }
-    else if (param == "postfix")
-    {
-        for (int i = 0; i < size; i++)
-        {
-            if (this->at(i)->type == "postfix")
-            {
-                this->removeAt(i);
-            }
-        }
-    }
-    else if (param == "all")
-    {
-        for (int i = 0; i < size; i++)
-            this->removeAt(i);
-    }
-    else
-    {
-        int position = stoi(param);
-
-        if (position <= 0)
-        {
-            this->removeFromFront();
-        }
-        else if (position >= size)
-        {
-            return;
-        }
-        else
-            this->removeAt(position);
-    }
-}
-
 string DoublyLinkedList::prefixToPostfix(string eq)
 {
     Stack stack;
@@ -382,10 +406,12 @@ string DoublyLinkedList::prefixToPostfix(string eq)
     {
         if (eq[i] == '*' || eq[i] == '/' || eq[i] == '+' || eq[i] == '-')
         {
-            string one = stack.pop();
-            string two = stack.pop();
+            string one = stack.peek();
+            stack.pop();
+            string two = stack.peek();
+            stack.pop();
 
-            string temp = eq[i] + one + two;
+            string temp = one + two + eq[i];
 
             stack.push(temp);
         }
@@ -422,37 +448,6 @@ string DoublyLinkedList::postfixToPrefix(string eq)
 }
 
 /* Test
-
-bool DoublyLinkedList::addAt(int index, string word) {
-    Node* temp = new Node(word);
-    Node* curr = new Node;
-    curr = head;
-
-    if (index < 0)
-        return false;
-
-    //If the List is empty or the index specified is 0, adds te node to the beginning of the list
-    if (head == nullptr || index == 0) {
-        addToFront(word);
-    }
-
-    //If the index is within the list iterate to the correct position and add the new node
-    else if (index >= 0 && index <= size - 1) {
-        for (int i = 0; i < index - 1; i++)
-        {
-            curr = curr->next;
-        }
-        temp->next = curr->next;
-        curr->next = temp;
-        size++;
-    }
-
-    //If the user tries to add beyond the endd of the list it appends it to the end with the AddToEndfunction
-    else if (index > size - 1) {
-        addToEnd(word);
-    }
-    return true;
-}
 
 //Checks if any node in the linked list contains the specified string
 bool DoublyLinkedList::contains(string sentence) {

@@ -30,8 +30,11 @@ private:
 public:
     DoublyLinkedList();
     const Node* getTail();
+    const Node* getHead();
     bool isEmpty();
     int getSize();
+    int getNumPrefix();
+    int getNumPostfix();
 
     bool print();    
     bool print(ofstream& output);
@@ -41,7 +44,7 @@ public:
 
     void addToFront(string, string);
     void addToEnd(string, string);
-    bool addAt(int index, string word);
+    bool addAt(int index, string t, string e);
     bool removeFromFront();
     bool removeFromEnd();
     bool removeAt(int index);
@@ -54,7 +57,6 @@ public:
 
     //hw3
     void convertList(string param);
-    void removeList(string param);
 
     string prefixToPostfix(string eq);
     string postfixToPrefix(string eq);

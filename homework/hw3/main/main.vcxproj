@@ -154,9 +154,21 @@
     <Text Include="command31.txt" />
     <Text Include="command32.txt" />
     <Text Include="command33.txt" />
+    <Text Include="command34.txt" />
+    <Text Include="command35.txt" />
+    <Text Include="command36.txt" />
+    <Text Include="command37.txt" />
+    <Text Include="command38.txt" />
+    <Text Include="command39.txt" />
     <Text Include="input31.txt" />
     <Text Include="input32.txt" />
     <Text Include="input33.txt" />
+    <Text Include="input34.txt" />
+    <Text Include="input35.txt" />
+    <Text Include="input36.txt" />
+    <Text Include="input37.txt" />
+    <Text Include="input38.txt" />
+    <Text Include="input39.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -19,17 +19,11 @@ int main(int argc, char* argv[])
 	string output = am.get("output");
 	string command = am.get("command");
 
-	//Temporary, delete this when uploading
-	//input = "input32.txt";
-	//command = "command32.txt";
-	//output = "ans32.txt";
-
 	DoublyLinkedList list;
 	ReserveStack reserveStack;
 
 	readInputFile(input, list, reserveStack);
 	readCommandFile(command, output, list, reserveStack);
-
 }
 
 void readInputFile(string inputFile, DoublyLinkedList& list, ReserveStack& reserveStack) 
@@ -56,7 +50,6 @@ void readInputFile(string inputFile, DoublyLinkedList& list, ReserveStack& reser
 				equation = RemoveSpace(equation);
 
 				list.addToEnd(type, equation);
-				reserveStack.push(type, equation);
 			}
 		}
 	}
@@ -85,23 +78,72 @@ void readCommandFile(string commandFile, string outputFile, DoublyLinkedList& li
 				getline(ss, temp, '(');
 				getline(ss, param, ')');
 				
-				list.convertList(param);
+				if (list.getSize() >= 1)
+					list.convertList(param);
 			}
 			else if (line.find("removeList") != string::npos)
 			{
 				getline(ss, temp, '(');
 				getline(ss, param, ')');
 
-				list.removeList(param);
+				if (param == "postfix")
+				{
+					int i = 0;
+					while (list.getNumPostfix() > 0)
+					{
+						if (list.at(i)->type == "postfix")
+						{
+							list.removeAt(i);
+						}
+						else
+							i++;
+					}
+				}
+				else if (param == "prefix")
+				{
+					int i = 0;
+					while (list.getNumPrefix() > 0)
+					{
+						if (list.at(i)->type == "prefix")
+						{
+							list.removeAt(i);
+						}
+						else
+							i++;
+					}
+				}
+				else if (param == "all")
+				{
+					while (list.getSize() > 0)
+					{
+						list.removeFromFront();
+					}
+				}
+				else //Param must be a position
+				{
+					int pos = stoi(param);
+
+					if (pos <= 0)
+					{
+						list.removeFromFront();
+					}
+					else if (pos >= list.getSize())
+					{
+
+					}
+					else
+					{
+						list.removeAt(pos);
+					}
+
+				}
 			}
 			else if (line == "printList")
 			{
-				cout << "List:" << endl; list.print(); cout << endl;
 				output << "List:" << endl; list.print(output); output << endl;
 			}
 			else if (line == "printListBackwards")
 			{
-				cout << "Reversed List:" << endl; list.printRev(); cout << endl;
 				output << "Reversed List:" << endl; list.printRev(output); output << endl;
 			}
 			else if (line.find("pushReserve") != string::npos)
@@ -109,33 +151,139 @@ void readCommandFile(string commandFile, string outputFile, DoublyLinkedList& li
 				getline(ss, temp, '(');
 				getline(ss, param, ')');
 
-				stack.push(param);
+				if (param == "postfix")
+				{
+					int i = 0;
+					while (list.getNumPostfix() > 0)
+					{
+						if (list.at(i)->type == "postfix")
+						{
+							stack.push(list.at(i)->type, list.at(i)->equation);
+							list.removeAt(i);
+						}
+						else
+							i++;
+					}
+				}
+				else if (param == "prefix")
+				{
+					int i = 0;
+					while (list.getNumPrefix() > 0)
+					{
+						if (list.at(i)->type == "prefix")
+						{
+							stack.push(list.getHead()->type, list.getHead()->equation);
+							list.removeAt(i);
+						}
+						else
+							i++;
+					}
+				}
+				else if (param == "all")
+				{
+					int size = list.getSize();
+
+					while(list.getSize() > 0)
+					{
+						stack.push(list.getHead()->type, list.getHead()->equation);
+						list.removeFromFront();
+					}
+				}
+				else //Param must be a position
+				{
+					int pos = stoi(param);
+
+					if (pos <= 0)
+					{
+						if (list.getSize() >= 1)
+						{
+							stack.push(list.at(0)->type, list.at(0)->equation);
+							list.removeAt(0);
+						}
+					}
+					else if (pos >= list.getSize())
+					{
+
+					}
+					else 
+					{
+						stack.push(list.at(pos)->type, list.at(pos)->equation);
+						list.removeAt(pos);
+					}
+				}
+
+
 			}
 			else if (line.find("popReserve") != string::npos)
-			{
+			{ 
+				getline(ss, temp, '(');
+				getline(ss, param, ')');
+				int pos = stoi(param);
 
+				if (stack.getSize() >= 1)
+				{
+					if (pos <= 0)
+						list.addToFront(stack.peek()->typ, stack.peek()->eq);
+					else if (pos >= list.getSize())
+						list.addToEnd(stack.peek()->typ, stack.peek()->eq);
+					else
+						list.addAt(pos, stack.peek()->typ, stack.peek()->eq);
+
+					stack.pop();
+				}
 			}
-			else if (line.find("flipReserve") != string::npos)
+			else if (line == "flipReserve")
 			{
+				ReserveStack temp;
+				int size = stack.getSize();
 
+				for (int i = 0; i < size; i++)
+				{
+					temp.push(stack.peek()->typ, stack.peek()->eq);
+					stack.pop();
+				}
+
+				stack.setSize(temp.getSize());
+				stack = temp.getTop();
 			}
-			else if (line.find("printReserveSize") != string::npos)
+			else if (line == "printReserveSize")
 			{
-
+				output << "Reserve Size: " << stack.getSize() << endl << endl;
 			}
-			else if (line.find("convertReserve") != string::npos)
+			else if (line == "convertReserve")
 			{
-
+				if(stack.getSize() >= 1)
+					stack.convert();
 			}
-			else if (line.find("printReserveTop") != string::npos)
+			else if (line == "printReserveTop")
 			{
-
+				if (stack.getSize() >= 1)
+				{
+					output << "Top of Reserve: " << stack.peek()->typ << ":" << stack.peek()->eq << endl << endl;
+				}
+				else
+				{
+					output << "Top of Reserve: EMPTY" << endl << endl;
+				}
 			}
 			else if (line.find("emptyReserve") != string::npos)
 			{
+				getline(ss, temp, '(');
+				getline(ss, param, ')');
+				int pos = stoi(param);
 
+				while (stack.getSize() != 0)
+				{
+					if (pos <= 0)
+						list.addToFront(stack.peek()->typ, stack.peek()->eq);
+					else if (pos >= list.getSize())
+						list.addToEnd(stack.peek()->typ, stack.peek()->eq);
+					else
+						list.addAt(pos, stack.peek()->typ, stack.peek()->eq);
+
+					stack.pop();
+				}
 			}
-			
 		}
 	}
 

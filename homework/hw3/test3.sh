@@ -74,3 +74,63 @@ else
     echo -e "Test case 3    ${GREEN}PASSED.${NC}"
     rm -f 3.diff
 fi
+# For test case 4
+timeout -k 5s 5s ./${programname} "input=input${hwnum}4.txt;command=command${hwnum}4.txt;output=output${hwnum}4.txt" 1>1.stdcout 2>1.stderr
+diff -iEBwu ans${hwnum}4.txt output${hwnum}4.txt > 4.diff
+if [ $? -ne 0 ]; then
+    echo -e "Test case 4    ${RED}FAILED.${NC}"
+    correct=false
+else
+    echo -e "Test case 4    ${GREEN}PASSED.${NC}"
+    rm -f 4.diff
+fi
+# For test case 5
+timeout -k 5s 5s ./${programname} "input=input${hwnum}5.txt;command=command${hwnum}5.txt;output=output${hwnum}5.txt" 1>1.stdcout 2>1.stderr
+diff -iEBwu ans${hwnum}5.txt output${hwnum}5.txt > 5.diff
+if [ $? -ne 0 ]; then
+    echo -e "Test case 5    ${RED}FAILED.${NC}"
+    correct=false
+else
+    echo -e "Test case 5    ${GREEN}PASSED.${NC}"
+    rm -f 4.diff
+fi
+# For test case 6
+timeout -k 5s 5s ./${programname} "input=input${hwnum}6.txt;command=command${hwnum}6.txt;output=output${hwnum}6.txt" 1>1.stdcout 2>1.stderr
+diff -iEBwu ans${hwnum}6.txt output${hwnum}6.txt > 6.diff
+if [ $? -ne 0 ]; then
+    echo -e "Test case 6    ${RED}FAILED.${NC}"
+    correct=false
+else
+    echo -e "Test case 6    ${GREEN}PASSED.${NC}"
+    rm -f 6.diff
+fi
+# For test case 7
+timeout -k 5s 5s ./${programname} "input=input${hwnum}7.txt;command=command${hwnum}7.txt;output=output${hwnum}7.txt" 1>1.stdcout 2>1.stderr
+diff -iEBwu ans${hwnum}7.txt output${hwnum}7.txt > 7.diff
+if [ $? -ne 0 ]; then
+    echo -e "Test case 7    ${RED}FAILED.${NC}"
+    correct=false
+else
+    echo -e "Test case 7    ${GREEN}PASSED.${NC}"
+    rm -f 7.diff
+fi
+# For test case 8
+timeout -k 5s 5s ./${programname} "input=input${hwnum}8.txt;command=command${hwnum}8.txt;output=output${hwnum}8.txt" 1>1.stdcout 2>1.stderr
+diff -iEBwu ans${hwnum}8.txt output${hwnum}8.txt > 8.diff
+if [ $? -ne 0 ]; then
+    echo -e "Test case 8    ${RED}FAILED.${NC}"
+    correct=false
+else
+    echo -e "Test case 8    ${GREEN}PASSED.${NC}"
+    rm -f 8.diff
+fi
+# For test case 9
+timeout -k 5s 5s ./${programname} "input=input${hwnum}9.txt;command=command${hwnum}9.txt;output=output${hwnum}9.txt" 1>1.stdcout 2>1.stderr
+diff -iEBwu ans${hwnum}9.txt output${hwnum}9.txt > 9.diff
+if [ $? -ne 0 ]; then
+    echo -e "Test case 9    ${RED}FAILED.${NC}"
+    correct=false
+else
+    echo -e "Test case 9    ${GREEN}PASSED.${NC}"
+    rm -f 9.diff
+fi
