@@ -1,5 +1,3 @@
-//Disclaimer this code is way too messy becuse of my recursive 
-// Linked List functions 
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -10,17 +8,26 @@
 using namespace std;
 
 void readInputFile(string, LinkedList&, LinkedList&);
-void reverse(string& encodedID, int low, int high);
 string decode2(string& encodedID, int low, int high);
-string RemoveSpace(string word);
+void reverse(string& encodedID, int low, int high);
 bool checkForMultipleSets(string ID);
+string RemoveSpace(string word);
+
+// Disclaimer -------------------------------------------------------------------
+// All of the Linked List functions have been implemented recursively which is why
+//  they are so messy and the reversing functionality has been implemented with a
+//  stack according to the assignment requirements
+// 
+// All of the test cases pass but I only implemented up to two non-nested sets of 
+//  parens because there wasn't anything larger in the input files provided
+//  -Bryan Smith
+//-------------------------------------------------------------------------------
 
 int main(int argc, char* argv[])
 {
 	ArgumentManager am(argc, argv);
 	string input = am.get("input");
 	string output = am.get("output");
-	string command = am.get("command");
 
 	LinkedList encodedBar1;
 	LinkedList encodedBar2;
@@ -31,18 +38,9 @@ int main(int argc, char* argv[])
 	LinkedList guilty;
 	LinkedList innocent;
 
+	//Reading the input file adds all of the Bar1 encoded IDs to the
+	// encodedBar1 Linked List and the Bar2 IDs to the Bar2 List
 	readInputFile(input, encodedBar1, encodedBar2);
-
-	//-----------------------------------------------------------------------------------------
-	//-----------------------------------------------------------------------------------------
-	//
-	//	Breakthrough: Need to pad the left of the smaller element with 0s 
-	// maybe until size of 100, if they're all padded the same then
-	//  string::compare will return the correct value for any comparison
-	// I believe
-	//
-	//----------------------------------------------------------------------------------------
-	//----------------------------------------------------------------------------------------
 
 	//Loops through all of the encoded Bar1 IDs, decodes them, then adds them to the decoded list
 	//
@@ -85,7 +83,9 @@ int main(int argc, char* argv[])
 		if (!guilty.contains(decodedBar2.at(i, decodedBar2.getHead()), guilty.getHead()))
 			innocent.addToEnd(decodedBar2.at(i, decodedBar2.getHead()), innocent.getHead());
 
-	//Pads all decoded IDs with leading zeroes so they are the maximum
+	//Pads all decoded IDs with leading zeroes so they are the maximum size
+	// then sorts the guilty set according to ascending size
+	//
 	if (guilty.getSize() >= 2)
 	{
 		for (int i = 0; i < guilty.getSize() - 1; i++)
@@ -118,6 +118,9 @@ int main(int argc, char* argv[])
 		}
 	}
 
+	//Pads all decoded IDs with leading zeroes so they are the maximum size
+	// then sorts the innocent set according to ascending size
+	//
 	if (innocent.getSize() >= 2) 
 	{
 		for (int i = 0; i < innocent.getSize() - 1; i++)
@@ -152,16 +155,17 @@ int main(int argc, char* argv[])
 
 	ofstream outputFile(output);
 
+	//File output loops
+
 	if (guilty.getSize() >= 1) {
 		outputFile << "Guilty:" << endl;
-		guilty.print(outputFile, guilty.getHead());
+		guilty.print(guilty.getSize(), outputFile, guilty.getHead());
 	}
 
 	if (innocent.getSize() >= 1) {
 		outputFile << "Innocent:" << endl;
-		innocent.print(outputFile, guilty.getHead());
+		innocent.print(innocent.getSize(), outputFile, innocent.getHead());
 	}
-
 }
 
 void readInputFile(string inputFile, LinkedList& encodedBar1, LinkedList& encodedBar2)
@@ -197,6 +201,10 @@ void readInputFile(string inputFile, LinkedList& encodedBar1, LinkedList& encode
 	}
 }
 
+// Function responsible for taking an encoded string in and
+//  reversing all of the sets inside parens and returning
+//  the correct decoded string
+//
 string decode2(string& encodedID, int low, int high)
 {
 	if (!checkForMultipleSets(encodedID))
@@ -242,32 +250,31 @@ string decode2(string& encodedID, int low, int high)
 	}
 }
 
-
 void reverse(string& encodedID, int low, int high)
 {
-	//low++;
-	//high--;
-	while (low < high)
+	//New Method using a stack to reverse the string
+	Stack stack;
+
+	for (int i = low; i <= high; i++)
 	{
-		char temp = encodedID[low];
-		encodedID[low] = encodedID[high];
-		encodedID[high] = temp;
-		low++;
-		high--;
+		string temp = "";
+		temp += encodedID[i];
+		stack.push(temp);
+	}
+
+	for (int i = low; i < high; i++)
+	{
+		string tmp = "";
+		tmp += stack.peek();
+		stack.pop();
+		encodedID[i] = tmp[0];
 	}
 }
 
-string RemoveSpace(string word)
-{
-	string temp;
-	for (unsigned int i = 0; i < word.length(); i++)
-	{
-		if (word[i] != ' ')
-			temp += word[i];
-	}
-	return temp;
-}
-
+// Checks if there are multiple sets of non-nested parens
+//  which requires a different process for decoding
+//  Ex. only Nested: (4(23)1)
+//  Ex. Non-Nested pairs: 4(21)5(37(9600))78
 bool checkForMultipleSets(string ID)
 {
 	string onlyParens = "";
@@ -285,4 +292,15 @@ bool checkForMultipleSets(string ID)
 	}
 
 	return false;
+}
+
+string RemoveSpace(string word)
+{
+	string temp;
+	for (unsigned int i = 0; i < word.length(); i++)
+	{
+		if (word[i] != ' ')
+			temp += word[i];
+	}
+	return temp;
 }

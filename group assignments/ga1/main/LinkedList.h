@@ -31,8 +31,9 @@ public:
     Node* getTail();
     bool isEmpty();
     int getSize();
-    void print();
+    void print(int size, Node*);
     void print(ofstream&, Node*);
+    void print(int, ofstream&, Node*);
     void addToFront(string);
     bool addToEnd(string, Node*);
     string at(int, Node*);

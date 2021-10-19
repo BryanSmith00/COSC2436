@@ -22,16 +22,18 @@ bool LinkedList::isEmpty() { return head == nullptr; }
 
 int LinkedList::getSize() { return size; }
 
-//----------------------------------
-//Need to implement this recursively
-//----------------------------------
-void LinkedList::print()
+//Recursive Print cout
+void LinkedList::print(int size, Node* h)
 {
-	Node* curr = head;
-	while (curr != nullptr)
+	if (size == 0 || h == nullptr)
 	{
-		cout << curr->id << endl;
-		curr = curr->next;
+		return;
+	}
+	else
+	{
+		cout << h->id << endl;
+		print(--size, h->next);
+		return;
 	}
 }
 
@@ -42,6 +44,21 @@ void LinkedList::print(ofstream& output, Node* h)
 	{
 		output << curr->id << endl;
 		curr = curr->next;
+	}
+}
+
+//Print recursively ofstream
+void LinkedList::print(int size, ofstream& output, Node* h)
+{
+	if (size == 0 || h == nullptr)
+	{
+		return;
+	}
+	else
+	{
+		output << h->id << endl;
+		print(--size, output, h->next);
+		return;
 	}
 }
 
