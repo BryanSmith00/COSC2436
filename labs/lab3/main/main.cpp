@@ -13,6 +13,9 @@ int main(int argc, char* argv[])
 	string input = am.get("input");
 	string output = am.get("output");
 
+	input = "input4.txt";
+	output = "output4.txt";
+
 	Queue queue1;
 	Queue queue2;
 	Queue discardQueue;
