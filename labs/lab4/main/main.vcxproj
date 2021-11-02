@@ -140,9 +140,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="PriorityQueue.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentManager.h" />
+    <ClInclude Include="PriorityQueue.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="input1.txt" />

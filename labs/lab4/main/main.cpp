@@ -2,6 +2,7 @@
 #include <fstream>
 #include <string>
 #include "ArgumentManager.h"
+#include "PriorityQueue.h"
 using namespace std;
 
 string RemoveSpace(string word);
@@ -13,8 +14,9 @@ int main(int argc, char* argv[])
 	string output = am.get("output");
 	string command = am.get("command");
 
-	input = ;
-	output = ;
+	input = "input1.txt";
+	output = "output1.txt";
+
 
 }
 
