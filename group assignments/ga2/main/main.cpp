@@ -7,7 +7,7 @@
 #include "Stack.h"
 using namespace std;
 
-vector<string> readInputFile(string, bool&);
+vector<string> readInputFile(string, bool&, ofstream&);
 bool isBalanced(string);
 int precedence(string);
 string infixToPostfix(string);
@@ -20,16 +20,12 @@ int main(int argc, char* argv[])
 	string output = am.get("output");
 	string command = am.get("command");
 
-	input = "input21.txt";
-	output = "output21.txt";
-
 	vector<int> results;
 	bool validExp = true;
 	bool same = true;
+	ofstream outFile(output);
 
-	cout << evaluateExpression(infixToPostfix("a+b-(A+1)-(-3-B)"));
-	/*
-	vector<string> equations = readInputFile(input, validExp);
+	vector<string> equations = readInputFile(input, validExp, outFile);
 
 	if (validExp)
 	{
@@ -48,18 +44,13 @@ int main(int argc, char* argv[])
 		}
 
 		if (same == true)
-			cout << "Yes" << endl;
+			outFile << "Yes" << endl;
 		else
-			cout << "No" << endl;
-
-		for (int i = 0; i < results.size(); i++)
-		{
-			cout << results.at(i) << endl;
-		}
-	}*/
+			outFile << "No" << endl;
+	}
 }
 
-vector<string> readInputFile(string inputFile, bool &validExp)
+vector<string> readInputFile(string inputFile, bool &validExp, ofstream& output)
 {
 	vector<string> equations;
 	ifstream input(inputFile);
@@ -76,7 +67,7 @@ vector<string> readInputFile(string inputFile, bool &validExp)
 				equations.push_back(line);
 			else
 			{
-				cout << "Error at: " << lineNum << endl;
+				output << "Error at: " << lineNum << endl;
 				validExp = false;
 			}
 
@@ -141,6 +132,16 @@ string infixToPostfix(string eq)
 {
 	string post = "";
 	Stack stk;
+
+	for (unsigned int i = 0; i < eq.size() - 2; i++)
+	{
+		if (eq[i] == '(' || eq[i] == '{' || eq[i] == '[')
+		{
+			if (eq[i + 1] == '-')
+				//if(isdigit(eq[i + 2]) || isalpha(eq[i + 2]))
+				eq[i + 1] = '!';
+		}
+	}
 
 	for (unsigned int i = 0; i < eq.size(); i++)
 	{
@@ -208,12 +209,21 @@ int evaluateExpression(string eq)
 			stk.push(tmp);
 		else if (isalpha(eq[i]))
 			stk.push(to_string(int(eq[i])));
-
+		else if (eq[i] == '!')
+		{
+			string tmp = ""; tmp += eq[i + 1];
+			int num = 0 - stoi(tmp);
+			stk.push(to_string(num));
+			i++;
+		}
 		else
 		{
-
 			int val1 = stoi(stk.pop());
-			int val2 = stoi(stk.pop());
+			int val2;
+			if (stk.isEmpty())
+				val2 = 0;
+			else
+				val2 = stoi(stk.pop());
 			switch (eq[i])
 			{
 			case '+': stk.push(to_string(val2 + val1)); break;

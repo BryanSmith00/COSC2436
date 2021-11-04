@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "stack.h"
+#include "Stack.h"
 using namespace std;
 
 Stack::Stack()
