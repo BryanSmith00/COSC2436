@@ -27,9 +27,8 @@ int main(int argc, char* argv[])
 	bool validExp = true;
 	bool same = true;
 
-	//cout << evaluateExpression(infixToPostfix("a+b-(A+1)-(-3-B)")) << endl;
-	cout << evaluateExpression("ab+A1+-3-B--") << endl;
-/*
+	cout << evaluateExpression(infixToPostfix("a+b-(A+1)-(-3-B)"));
+	/*
 	vector<string> equations = readInputFile(input, validExp);
 
 	if (validExp)
@@ -52,6 +51,11 @@ int main(int argc, char* argv[])
 			cout << "Yes" << endl;
 		else
 			cout << "No" << endl;
+
+		for (int i = 0; i < results.size(); i++)
+		{
+			cout << results.at(i) << endl;
+		}
 	}*/
 }
 
@@ -143,7 +147,9 @@ string infixToPostfix(string eq)
 		string tmp = ""; tmp += eq[i];
 
 		if (eq[i] == '(' || eq[i] == '{' || eq[i] == '[')
+		{
 			stk.push(tmp);
+		}
 		else if (eq[i] == ')') {
 			while (stk.peek() != "(")
 			{
@@ -203,10 +209,9 @@ int evaluateExpression(string eq)
 		else if (isalpha(eq[i]))
 			stk.push(to_string(int(eq[i])));
 
-		// If the scanned character is an operator, pop two
-		// elements from stack apply the operator
 		else
 		{
+
 			int val1 = stoi(stk.pop());
 			int val2 = stoi(stk.pop());
 			switch (eq[i])
