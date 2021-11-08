@@ -19,12 +19,6 @@ public:
 	}
 };
 
-struct ComparePriority {
-	bool operator()(node const& p1, node const& p2) {
-		return p1.priority > p2.priority;
-	}
-};
-
 string Replace(string message, string orig, string newChar)
 {
 	string newMessage = "";
@@ -49,16 +43,18 @@ int main(int argc, char* argv[])
 	input = "input41.txt";
 	output = "output41.txt";
 
-	priority_queue<node, vector<node>, ComparePriority> pq;
 	queue<string> q;
 	ifstream inputFile(input);
 	string temp;
+
+	queue<node> comms[10];
 
 	while (!inputFile.eof())
 	{
 		getline(inputFile, temp);
 		if (temp != "")
 		{
+
 			string num = temp.substr(temp.find('(') + 1);
 			string noparen = "";
 
@@ -71,115 +67,161 @@ int main(int argc, char* argv[])
 			node a1;
 			a1.command = temp;
 			a1.priority = stoi(noparen);
-			pq.push(a1);
+
+			switch (stoi(noparen))
+			{
+			case 1:
+				comms[0].push(a1);
+				break;
+			case 2:
+				comms[1].push(a1);
+				break;
+			case 3:
+				comms[2].push(a1);
+				break;
+			case 4:
+				comms[3].push(a1);
+				break;
+			case 5:
+				comms[4].push(a1);
+				break;
+			case 6:
+				comms[5].push(a1);
+				break;
+			case 7:
+				comms[6].push(a1);
+				break;
+			case 8:
+				comms[7].push(a1);
+				break;
+			case 9:
+				comms[8].push(a1);
+				break;
+			case 10:
+				comms[9].push(a1);
+				break;
+			}
 		}
 	}
 
-	//All commands should be in pq ordered correctly 
-	// this loop extracts the commands and executes them in order
-	while (!pq.empty())
+	for (unsigned int i = 0; i < 10; i++)
 	{
-		string command = pq.top().command;
-		stringstream ss(command);
-		string garbage = "";
-
-		if (command.find("DECODE") != string::npos)
+		while (!comms[i].empty())
 		{
-			string message = command.substr(command.find('[') + 1, (command.find(']') - command.find('[') - 1));
-			q.push(message);
-		}
-		else if (command.find("REPLACE") != string::npos)
-		{
-			string orig;
-			string newChar;
-			string message = q.front();
-			q.pop();
-			getline(ss, garbage, '[');
-			getline(ss, orig, ',');
-			getline(ss, newChar, ']');
+			string command = comms[i].front().command;
+			stringstream ss(command);
+			string garbage = "";
 
-			q.push(Replace(message, orig, newChar));
-		}
-		else if (command.find("ADD") != string::npos)
-		{
-			string message = q.front();
-			q.pop();
-			string orig;
-			string newChar;
-			string newMessage = "";
-			getline(ss, garbage, '[');
-			getline(ss, orig, ',');
-			getline(ss, newChar, ']');
-
-			for (unsigned int i = 0; i < message.size(); i++)
+			if (command.find("DECODE") != string::npos)
 			{
-				string temp = "";
-				temp += message[i];
-				if (temp == orig)
+				string message = command.substr(command.find('[') + 1, (command.find(']') - command.find('[') - 1));
+				q.push(message);
+			}
+			else if (command.find("REPLACE") != string::npos)
+			{
+				if (!q.empty())
 				{
-					newMessage += message[i];
-					newMessage += newChar;
-				}
-				else
-				{
-					newMessage += message[i];
+					string orig;
+					string newChar;
+					string message = q.front();
+					q.pop();
+					getline(ss, garbage, '[');
+					getline(ss, orig, ',');
+					getline(ss, newChar, ']');
+
+					q.push(Replace(message, orig, newChar));
 				}
 			}
-			q.push(newMessage);
-		}
-		else if (command.find("REMOVE") != string::npos)
-		{
-			string toRemove;
-			string message = q.front();
-			q.pop();
-			getline(ss, garbage, '[');
-			getline(ss, toRemove, ']');
-			string newMessage = "";
-
-			for (unsigned int i = 0; i < message.size(); i++)
+			else if (command.find("ADD") != string::npos)
 			{
-				string temp = "";
-				temp += message[i];
-				if (temp != toRemove)
-					newMessage += message[i];
+				if (!q.empty())
+				{
+					string message = q.front();
+					q.pop();
+					string orig;
+					string newChar;
+					string newMessage = "";
+					getline(ss, garbage, '[');
+					getline(ss, orig, ',');
+					getline(ss, newChar, ']');
+
+					for (unsigned int i = 0; i < message.size(); i++)
+					{
+						string temp = "";
+						temp += message[i];
+						if (temp == orig)
+						{
+							newMessage += message[i];
+							newMessage += newChar;
+						}
+						else
+						{
+							newMessage += message[i];
+						}
+					}
+					q.push(newMessage);
+				}
 			}
-			q.push(newMessage);
-
-
-		}
-		else if (command.find("SWAP") != string::npos)
-		{
-			string orig;
-			string newChar;
-			string message = q.front();
-			q.pop();
-			string newMessage = "";
-			getline(ss, garbage, '[');
-			getline(ss, orig, ',');
-			getline(ss, newChar, ']');
-
-			for (unsigned i = 0; i < message.size(); i++)
+			else if (command.find("REMOVE") != string::npos)
 			{
-				string temp = "";
-				temp += message[i];
-				if (temp == orig)
-					newMessage += newChar;
-				else if (temp == newChar)
-					newMessage += orig;
-				else
-					newMessage += message[i];
-			}
-			q.push(newMessage);
-		}
-		else if (command.find("PRINT") != string::npos)
-		{
-			string message = q.front();
-			q.pop();
-			cout << message << endl;
-		}
+				if (!q.empty())
+				{
+					string toRemove;
+					string message = q.front();
+					q.pop();
+					getline(ss, garbage, '[');
+					getline(ss, toRemove, ']');
+					string newMessage = "";
 
-		pq.pop();
+					for (unsigned int i = 0; i < message.size(); i++)
+					{
+						string temp = "";
+						temp += message[i];
+						if (temp != toRemove)
+							newMessage += message[i];
+					}
+					q.push(newMessage);
+				}
+			}
+			else if (command.find("SWAP") != string::npos)
+			{
+				if (!q.empty())
+				{
+					string orig;
+					string newChar;
+					string message = q.front();
+					q.pop();
+					string newMessage = "";
+					getline(ss, garbage, '[');
+					getline(ss, orig, ',');
+					getline(ss, newChar, ']');
+
+					for (unsigned i = 0; i < message.size(); i++)
+					{
+						string temp = "";
+						temp += message[i];
+						if (temp == orig)
+							newMessage += newChar;
+						else if (temp == newChar)
+							newMessage += orig;
+						else
+							newMessage += message[i];
+					}
+					q.push(newMessage);
+				}
+			}
+			else if (command.find("PRINT") != string::npos)
+			{
+				if (!q.empty())
+				{
+					string message = q.front();
+					q.pop();
+					cout << message << endl;
+				}
+			}
+
+			if(!comms[i].empty())
+				comms[i].pop();
+		}
 	}
-	
-
 }
