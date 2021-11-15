@@ -40,11 +40,9 @@ int main(int argc, char* argv[])
 	string input = am.get("input");
 	string output = am.get("output");
 
-	input = "input41.txt";
-	output = "output41.txt";
-
 	queue<string> q;
 	ifstream inputFile(input);
+	ofstream outputFile(output);
 	string temp;
 
 	queue<node> comms[10];
@@ -216,7 +214,7 @@ int main(int argc, char* argv[])
 				{
 					string message = q.front();
 					q.pop();
-					cout << message << endl;
+					outputFile << message << endl;
 				}
 			}
 
