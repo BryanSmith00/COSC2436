@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 #include <map>
 #include "ArgumentManager.h"
 using namespace std;
@@ -15,5 +16,7 @@ int main(int argc, char* argv[])
 	input = "input1.txt";
 	output = "output1.txt";
 
+	int numWords = 0;
+	vector<string> words;
 
 }
