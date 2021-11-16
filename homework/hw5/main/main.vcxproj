@@ -139,10 +139,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="btree.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArgumentManager.h" />
+    <ClInclude Include="btree.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="command51.txt" />

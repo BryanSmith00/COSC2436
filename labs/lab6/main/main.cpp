@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include "ArgumentManager.h"
+#include "avl.h"
 using namespace std;
 
 int main(int argc, char* argv[])
