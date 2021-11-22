@@ -25,6 +25,9 @@ int main(int argc, char* argv[])
 
 	ReadCommandFile(commands, degree, command);
 
+	BTree bt(degree);
+
+
 }
 
 void ReadCommandFile(vector<string>& commands, int& degree, string commandFile)
