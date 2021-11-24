@@ -8,6 +8,7 @@
 using namespace std;
 
 void ReadCommandFile(vector<string>&, int&, string);
+void readInputFile(BTree&, string);
 
 int main(int argc, char* argv[])
 {
@@ -16,8 +17,8 @@ int main(int argc, char* argv[])
 	string output = am.get("output");
 	string command = am.get("command");
 
-	input = "input51.txt";
-	command = "command51.txt";
+	input = "input52.txt";
+	command = "command52.txt";
 	output = "output51.txt";
 
 	int degree = 0;
@@ -27,7 +28,9 @@ int main(int argc, char* argv[])
 
 	BTree bt(degree);
 
+	readInputFile(bt, input);
 
+	cout << "End of program" << endl;
 }
 
 void ReadCommandFile(vector<string>& commands, int& degree, string commandFile)
@@ -46,4 +49,19 @@ void ReadCommandFile(vector<string>& commands, int& degree, string commandFile)
 	}
 
 	command.close();
+}
+
+void readInputFile(BTree& bt, string inputFile)
+{
+	ifstream input(inputFile);
+
+	while (!input.eof())
+	{
+		string temp = "";
+		input >> temp;
+
+		bt.insert(stoi(temp));
+
+		
+	}
 }

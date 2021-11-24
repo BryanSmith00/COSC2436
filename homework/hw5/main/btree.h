@@ -5,12 +5,13 @@ using namespace std;
 
 class Node
 {
+public:
     int* keys;  // An array of keys
-    int t;      // Minimum degree (defines the range for number of keys)
+    int degree;
     Node** C; // An array of child pointers
     int n;     // Current number of keys
     bool leaf; // Is true when node is leaf. Otherwise false
-public:
+
     Node(int _t, bool _leaf);   // Constructor
 
     // A utility function to insert a new key in the subtree rooted with
@@ -36,13 +37,17 @@ public:
 // A BTree
 class BTree
 {
-    Node* root; // Pointer to root node
-    int t;  // Minimum degree
 public:
+    Node* root; // Pointer to root node
+    int degree;  // Minimum degree
+    int count;
+
+    int getCount() { return count; }
+
     // Constructor (Initializes tree as empty)
     BTree(int _t)
     {
-        root = NULL;  t = _t;
+        root = NULL;  degree = _t, count = 0;
     }
 
     // function to traverse the tree
@@ -57,24 +62,24 @@ public:
         return (root == NULL) ? NULL : root->search(k);
     }
 
-    // The main function that inserts a new key in this B-Tree
     void insert(int k)
     {
         // If tree is empty
         if (root == NULL)
         {
             // Allocate memory for root
-            root = new Node(t, true);
+            root = new Node(degree, true);
             root->keys[0] = k;  // Insert key
             root->n = 1;  // Update number of keys in root
+            count++;
         }
         else // If tree is not empty
         {
             // If root is full, then tree grows in height
-            if (root->n == 2 * t - 1)
+            if (root->n == 2 * degree - 1)
             {
                 // Allocate memory for new root
-                Node* s = new Node(t, false);
+                Node* s = new Node(degree, false);
 
                 // Make old root as child of new root
                 s->C[0] = root;
@@ -91,9 +96,13 @@ public:
 
                 // Change root
                 root = s;
+                count++;
             }
             else  // If root is not full, call insertNonFull for root
+            {
+                count++;
                 root->insertNonFull(k);
+            }
         }
     }
 };

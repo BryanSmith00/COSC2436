@@ -8,13 +8,13 @@ using namespace std;
 Node::Node(int t1, bool leaf1)
 {
     // Copy the given minimum degree and leaf property
-    t = t1;
+    degree = t1;
     leaf = leaf1;
 
     // Allocate memory for maximum number of possible keys
     // and child pointers
-    keys = new int[2 * t - 1];
-    C = new Node * [2 * t];
+    keys = new int[2 * degree - 1];
+    C = new Node * [2 * degree];
 
     // Initialize the number of keys as 0
     n = 0;
@@ -91,7 +91,7 @@ void Node::insertNonFull(int k)
             i--;
 
         // See if the found child is full
-        if (C[i + 1]->n == 2 * t - 1)
+        if (C[i + 1]->n == 2 * degree - 1)
         {
             // If the child is full, then split it
             splitChild(i + 1, C[i + 1]);
@@ -112,22 +112,22 @@ void Node::splitChild(int i, Node* y)
 {
     // Create a new node which is going to store (t-1) keys
     // of y
-    Node* z = new Node(y->t, y->leaf);
-    z->n = t - 1;
+    Node* z = new Node(y->degree, y->leaf);
+    z->n = degree - 1;
 
     // Copy the last (t-1) keys of y to z
-    for (int j = 0; j < t - 1; j++)
-        z->keys[j] = y->keys[j + t];
+    for (int j = 0; j < degree - 1; j++)
+        z->keys[j] = y->keys[j + degree];
 
     // Copy the last t children of y to z
     if (y->leaf == false)
     {
-        for (int j = 0; j < t; j++)
-            z->C[j] = y->C[j + t];
+        for (int j = 0; j < degree; j++)
+            z->C[j] = y->C[j + degree];
     }
 
     // Reduce the number of keys in y
-    y->n = t - 1;
+    y->n = degree - 1;
 
     // Since this node is going to have a new child,
     // create space of new child
@@ -143,7 +143,7 @@ void Node::splitChild(int i, Node* y)
         keys[j + 1] = keys[j];
 
     // Copy the middle key of y to this node
-    keys[i] = y->keys[t - 1];
+    keys[i] = y->keys[degree - 1];
 
     // Increment count of keys in this node
     n = n + 1;
