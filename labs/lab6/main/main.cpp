@@ -16,5 +16,8 @@ int main(int argc, char* argv[])
 	input = "input1.txt";
 	output = "output1.txt";
 
+	Node* root;
+	root = nullptr;
+
 
 }
