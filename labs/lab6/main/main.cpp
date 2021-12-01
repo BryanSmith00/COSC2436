@@ -2,9 +2,12 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <queue>
 #include "ArgumentManager.h"
 #include "avl.h"
 using namespace std;
+
+void ReadInputFile(string, Node*);
 
 int main(int argc, char* argv[])
 {
@@ -13,11 +16,24 @@ int main(int argc, char* argv[])
 	string output = am.get("output");
 	string command = am.get("command");
 
-	input = "input1.txt";
-	output = "output1.txt";
-
 	Node* root;
 	root = nullptr;
 
+	ifstream inputFile(input);
+	string num;
 
+	if (inputFile)
+	{
+		inputFile >> num;
+
+		while (!inputFile.eof())
+		{
+			string temp;
+			inputFile >> temp;
+			root = insert(root, stoi(temp));
+		}
+
+		ofstream outputFile(output);
+		LevelOrder(root, outputFile);
+	}
 }

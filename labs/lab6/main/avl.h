@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <queue>
 using namespace std;
 
 struct Node
@@ -18,45 +19,29 @@ int height(Node* root)
         return root->height;
 }
 
-// A utility function to right
-// rotate subtree rooted with y
-// See the diagram given above.
-Node* rightRotate(Node* y)
+Node* rightRotate(Node* root)
 {
-    Node* x = y->left;
-    Node* T2 = x->right;
+    Node* newNode1 = root->left;
+    Node* node2 = newNode1->right;
+    newNode1->right = root;
+    root->left = node2;
 
-    x->right = y;
-    y->left = T2;
+    root->height = max(height(root->left), height(root->right)) + 1;
+    newNode1->height = max(height(newNode1->left), height(newNode1->right)) + 1;
 
-    y->height = max(height(y->left),
-        height(y->right)) + 1;
-    x->height = max(height(x->left),
-        height(x->right)) + 1;
-
-    return x;
+    return newNode1;
 }
 
-// A utility function to left
-// rotate subtree rooted with x
-// See the diagram given above.
-Node* leftRotate(Node* x)
+Node* leftRotate(Node* root)
 {
-    Node* y = x->right;
-    Node* T2 = y->left;
+    Node* newNode1 = root->right;
+    Node* node2 = newNode1->left;
+    newNode1->left = root;
+    root->right = node2;
 
-    // Perform rotation
-    y->left = x;
-    x->right = T2;
-
-    // Update heights
-    x->height = max(height(x->left),
-        height(x->right)) + 1;
-    y->height = max(height(y->left),
-        height(y->right)) + 1;
-
-    // Return new root
-    return y;
+    root->height = max(height(root->left), height(root->right)) + 1;
+    newNode1->height = max(height(newNode1->left), height(newNode1->right)) + 1;
+    return newNode1;
 }
 
 int balanceFactor(Node* root)
@@ -64,7 +49,7 @@ int balanceFactor(Node* root)
     if (root == nullptr)
         return 0;
     else
-        return height(root->left) - height(root->right);
+        return (height(root->left) - height(root->right));
 }
 
 Node* newNode(int key)
@@ -77,50 +62,33 @@ Node* newNode(int key)
     return(node);
 }
 
-// Recursive function to insert a key
-// in the subtree rooted with node and
-// returns the new root of the subtree.
 Node* insert(Node* node, int key)
 {
-    /* 1. Perform the normal BST insertion */
     if (node == NULL)
         return(newNode(key));
-
     if (key < node->key)
         node->left = insert(node->left, key);
     else if (key > node->key)
         node->right = insert(node->right, key);
-    else // Equal keys are not allowed in BST
+    else
         return node;
 
-    /* 2. Update height of this ancestor node */
     node->height = 1 + max(height(node->left),
         height(node->right));
-
-    /* 3. Get the balance factor of this ancestor
-        node to check whether this node became
-        unbalanced */
     int balance = balanceFactor(node);
 
-    // If this node becomes unbalanced, then
-    // there are 4 cases
-
-    // Left Left Case
     if (balance > 1 && key < node->left->key)
         return rightRotate(node);
 
-    // Right Right Case
     if (balance < -1 && key > node->right->key)
         return leftRotate(node);
 
-    // Left Right Case
     if (balance > 1 && key > node->left->key)
     {
         node->left = leftRotate(node->left);
         return rightRotate(node);
     }
 
-    // Right Left Case
     if (balance < -1 && key < node->right->key)
     {
         node->right = rightRotate(node->right);
@@ -128,4 +96,19 @@ Node* insert(Node* node, int key)
     }
 
     return node;
+}
+
+void LevelOrder(Node* root, ofstream& output) {
+    queue<Node*> q;
+    Node* item;
+    q.push(root);
+    while (!q.empty()) {
+        item = q.front();
+        output << item->key << " ";
+        if (item->left != NULL)
+            q.push(item->left);
+        if (item->right != NULL)
+            q.push(item->right);
+        q.pop();
+    }
 }
